@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+import numpy as np
+import os
 
 def plot_training_loss(loss_history, save_path=None, show=True):
     epochs = range(1, len(loss_history) + 1)
