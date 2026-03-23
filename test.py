@@ -19,11 +19,8 @@ def test(model):
             labels = labels.to(device)
             batch_size = labels.size(0)
             preds = model(images) # 得到batchsize*clas(10)的张量
-<<<<<<< HEAD
             loss = F.cross_entropy(preds, labels)
             total_loss += loss.item() * batch_size
-=======
->>>>>>> d8ed29394c46c98cace1aac5dca1649459e99ab8
             probs, label_preds = preds.max(dim=1)
             correct_preds = torch.sum(labels==label_preds)
             batch_acc = correct_preds.item() / batch_size
@@ -32,7 +29,6 @@ def test(model):
             if step % 10 == 0:
                 print(f"step: {step} batch success rate: {batch_acc:.3f}, loss: {loss.item():.3f}")
 
-<<<<<<< HEAD
     avg_loss = total_loss / test_num_all
     success_rate = (test_correct/test_num_all).item()
     print(f"Finish! The final success rate is {success_rate:.3f}, and the average loss is {avg_loss:.3f}")
@@ -40,11 +36,3 @@ def test(model):
 
 
 
-=======
-    success_rate = (test_correct/test_num_all).item()
-    print("Finish! The final success rate is", success_rate) 
-
-
-        
-       
->>>>>>> d8ed29394c46c98cace1aac5dca1649459e99ab8
