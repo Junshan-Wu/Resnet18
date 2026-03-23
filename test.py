@@ -24,7 +24,7 @@ def test(model):
             test_num_all += batch_size
             print("step: {}  batch success rate: {:.3}".format(step, batch_acc))
 
-    success_rate = test_correct/test_num_all
+    success_rate = (test_correct/test_num_all).item()
     print("Finish! The final success rate is", success_rate) 
 
 

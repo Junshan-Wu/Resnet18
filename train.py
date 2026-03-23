@@ -15,7 +15,9 @@ def train(model, num_epoch):
     success_history = []
     val_loss_history = []
     val_success_history = []
-    saveDir = "C:/PycharmProjects/Resnet18/model weights/"
+    saveDir = "./model_weights/"
+    # 递归创建目录（如果不存在）
+    os.makedirs(saveDir, exist_ok=True)
     for epoch in range(num_epoch):
         # init the parameters of trainset
         correct_preds_all = 0
@@ -49,7 +51,7 @@ def train(model, num_epoch):
                 print('epoch: {} train step: {} success rate: {:.3}'.format(epoch, step, success_rate))
 
         avg_loss = total_loss / train_num_all
-        success_rate_epoch = correct_preds_all/train_num_all
+        success_rate_epoch = (correct_preds_all/train_num_all).item()
         print('epoch {} training finish! The success rate is {}, and the average loss is {}'.format(epoch,success_rate_epoch, avg_loss))
         success_history.append(success_rate_epoch)
         loss_history.append(avg_loss)   
@@ -72,18 +74,19 @@ def train(model, num_epoch):
                 val_num_all += val_batch_size
                 print("epoch: {} valid step: {}  batch success rate: {:.3}".format(epoch, val_step, val_batch_acc))
 
-        val_avg_loss = val_total_loss / val_num_all
-        val_success_rate = val_correct/val_num_all
-        print("epoch {} validation finish! The final success rate is {}, and the average loss is {}".format(epoch, val_success_rate, val_avg_loss))
-        val_loss_history.append(val_avg_loss)
-        val_success_history.append(val_success_rate)
+        if epoch % 3 == 0:
+            val_avg_loss = val_total_loss / val_num_all
+            val_success_rate = (val_correct/val_num_all).item()
+            print("epoch {} validation finish! The final success rate is {}, and the average loss is {}".format(epoch, val_success_rate, val_avg_loss))
+            val_loss_history.append(val_avg_loss)
+            val_success_history.append(val_success_rate)
 
 
 
-    if not os.path.exists(saveDir):
-        os.mkdir(saveDir)
-        saveDir = saveDir + 'default'+ str(epoch) 
-        torch.save(model.state_dict(), saveDir)
+    model_path = os.path.join(saveDir, f"final_model_epoch_{epoch}.pth")
+    torch.save(model.state_dict(), model_path)
+    print(f"Model saved to {model_path}")
+    
     # patience=3, threshold=1e-3
     # if len(loss_history) >= patience + 1:
     #    # 检查最近 patience 轮的相邻损失差值
