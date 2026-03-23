@@ -4,8 +4,12 @@ from model import Model
 import torch
 import os
 import numpy as np
+<<<<<<< HEAD
 from plot import plot_training_loss, plot_validation_loss, plot_success_rate, plot_validation_success_rate, plot_step_loss_curves
 import parameters
+=======
+from plot import plot_training_loss, plot_validation_loss, plot_success_rate, plot_validation_success_rate
+>>>>>>> d8ed29394c46c98cace1aac5dca1649459e99ab8
 
 model = Model()
 params = parameters.get_parameters()
@@ -14,7 +18,10 @@ model = model.to(device)
 
 if params.device == 'cuda':
     model = torch.nn.DataParallel(model)
+loss_history, success_history, val_loss_history, val_success_history = train(model, 10)
+test(model)
 
+<<<<<<< HEAD
 
 model, loss_history, success_history, val_loss_history, val_success_history, train_step_losses, val_step_losses = train(model, params.num_epoch)
 
@@ -35,6 +42,16 @@ np.save('results/data/val_loss_history.npy', val_loss_history)
 np.save('results/data/val_success_history.npy', val_success_history)
 print("Training data saved to results/data/")
 
+=======
+# 保存训练数据到 results/data
+os.makedirs('results/data', exist_ok=True)
+np.save('results/data/loss_history.npy', loss_history)
+np.save('results/data/success_history.npy', success_history)
+np.save('results/data/val_loss_history.npy', val_loss_history)
+np.save('results/data/val_success_history.npy', val_success_history)
+print("Training data saved to results/data/")
+
+>>>>>>> d8ed29394c46c98cace1aac5dca1649459e99ab8
 # Visualize training results and save plots to results/plot
 os.makedirs('results/plot', exist_ok=True)
 plot_training_loss(loss_history, save_path='results/plot/training_loss.png')
