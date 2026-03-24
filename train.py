@@ -88,7 +88,7 @@ def train(model, num_epoch):
         val_loss_history.append(val_avg_loss)
         val_success_history.append(val_success_rate)
 
-    model_path = os.path.join(saveDir, f"final_model_lr_{params.learning_rate}_epoch_{epoch}.pth")
+    model_path = os.path.join(saveDir, f"final_model_lr_{params.learning_rate}_epoch_{epoch+1}.pth")
     torch.save(model.state_dict(), model_path)
     print(f"Model saved to {model_path}")
     

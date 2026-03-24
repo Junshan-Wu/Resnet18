@@ -16,7 +16,7 @@ def plot_training_loss(loss_history, save_path=None, show=True):
     _save_and_show(save_path, show)
 
 def plot_validation_loss(val_loss_history, save_path=None, show=True):
-    epochs = [3 * (i + 1) for i in range(len(val_loss_history))]
+    epochs = range(1, len(val_loss_history) + 1)
     
     plt.figure(figsize=(8, 5))
     plt.plot(epochs, val_loss_history, marker='o', linestyle='-', color='r', label='Average Loss')
@@ -42,7 +42,7 @@ def plot_success_rate(success_history, save_path=None, show=True):
     _save_and_show(save_path, show)
 
 def plot_validation_success_rate(val_success_history, save_path=None, show=True):
-    epochs = [3 * (i + 1) for i in range(len(val_success_history))]
+    epochs = range(1, len(val_success_history) + 1)
     
     plt.figure(figsize=(8, 5))
     plt.plot(epochs, val_success_history, marker='o', linestyle='-', color='m', label='Success Rate')
@@ -57,6 +57,14 @@ def plot_validation_success_rate(val_success_history, save_path=None, show=True)
 def plot_learning_rate_comparison(file_paths, save_path=None, show=True):
     plt.figure(figsize=(10, 6))
     colors = plt.cm.tab10(np.linspace(0, 1, len(file_paths)))  # 使用颜色映射生成不同颜色
+
+    # 根据文件名判断数据集类型
+    if file_paths and "train_step_losses_lr_" in file_paths[0]:
+        dataset_type = "(trainset)"
+    elif file_paths and "val_step_losses_lr_" in file_paths[0]:
+        dataset_type = "(validset)"
+    else:
+        dataset_type = ""
 
     for i, file_path in enumerate(file_paths):
         if not os.path.exists(file_path):
@@ -77,7 +85,7 @@ def plot_learning_rate_comparison(file_paths, save_path=None, show=True):
 
     plt.xlabel("Step")
     plt.ylabel("Loss")
-    plt.title("Loss vs Step for Different Learning Rates")
+    plt.title(f"Loss vs Step for Different Learning Rates {dataset_type}")
     plt.legend()
     plt.grid(True)
 

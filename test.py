@@ -13,6 +13,7 @@ def test(model):
     device = params.device if torch.cuda.is_available() else "cpu"
     test_correct = 0
     test_num_all = 0
+    total_loss = 0
     with torch.no_grad():
         for step, (images, labels) in enumerate(testset):
             images = images.to(device)
