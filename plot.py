@@ -32,10 +32,10 @@ def plot_success_rate(success_history, save_path=None, show=True):
     epochs = range(1, len(success_history) + 1)
     
     plt.figure(figsize=(8, 5))
-    plt.plot(epochs, success_history, marker='o', linestyle='-', color='g', label='Success Rate')
+    plt.plot(epochs, success_history, marker='o', linestyle='-', color='g', label='Accuracy')
     plt.xlabel('Epoch')
-    plt.ylabel('Success Rate of Training Set')
-    plt.title('Success Rate vs. Epoch (Training Set)')
+    plt.ylabel('Accuracy of Training Set')
+    plt.title('Accuracy vs. Epoch (Training Set)')
     plt.grid(True)
     plt.legend()
 
@@ -45,10 +45,10 @@ def plot_validation_success_rate(val_success_history, save_path=None, show=True)
     epochs = range(1, len(val_success_history) + 1)
     
     plt.figure(figsize=(8, 5))
-    plt.plot(epochs, val_success_history, marker='o', linestyle='-', color='m', label='Success Rate')
+    plt.plot(epochs, val_success_history, marker='o', linestyle='-', color='m', label='Accuracy')
     plt.xlabel('Epoch')
-    plt.ylabel('Success Rate of Validation Set')
-    plt.title('Success Rate vs. Epoch (Validation Set)')
+    plt.ylabel('Accuracy of Validation Set')
+    plt.title('Accuracy vs. Epoch (Validation Set)')
     plt.grid(True)
     plt.legend()
 

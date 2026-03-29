@@ -1,13 +1,15 @@
 from test import test
 from train import train
 from model import Model
+from model_32 import Model_32
 import torch
 import os
 import numpy as np
 from plot import plot_training_loss, plot_validation_loss, plot_success_rate, plot_validation_success_rate, plot_learning_rate_comparison
 import parameters
 
-model = Model()
+# model = Model()
+model = Model_32()
 params = parameters.get_parameters()
 device = torch.device(params.device if torch.cuda.is_available() else "cpu")
 model = model.to(device)

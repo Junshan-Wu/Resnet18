@@ -4,7 +4,8 @@ import torch.nn.functional as F
 import math
 
 '''
-该模型对应的是3*224*224的输入图像，输出是10类的概率分布
+该模型对应的是3*32*32的输入图像，输出是10类的概率分布
+与model_224相比，去掉了开始的activation和maxpool层，还有就是全连接层之前做了一次Batchnorm
 
 '''
 class Basic_block(nn.Module):
@@ -47,21 +48,21 @@ class Basic_block(nn.Module):
     
 
 
-class Model(nn.Module):
+class Model_32(nn.Module):
     def __init__(self):
-        super(Model, self).__init__()
-        # 卷积核：N*C*H*W -> 64*3*7*7
-        self.conv1 = nn.Conv2d(in_channels=3, out_channels=64, kernel_size=7, stride=2, padding=3)
+        super(Model_32, self).__init__()
+        # 卷积核：N*C*H*W -> 64*3*3*3
+        self.conv1 = nn.Conv2d(in_channels=3, out_channels=64, kernel_size=3, stride=1, padding=1)
         self.bn1 = nn.BatchNorm2d(num_features=64)
-        self.activation = F.relu
-        self.maxpool1 = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
+
 
         self.Layer1 = self.Layer(64, 64)
         self.Layer2 = self.Layer(64, 128)
         self.Layer3 = self.Layer(128, 256)
         self.Layer4 = self.Layer(256, 512)
 
-        self.avgpool = nn.AvgPool2d(kernel_size=7, stride=1)
+        self.avgpool = nn.AvgPool2d(kernel_size=4, stride=1)
+        self.bn2 = nn.BatchNorm2d(num_features=512)
         self.linear = nn.Linear(512, 10)
 
 
@@ -75,6 +76,7 @@ class Model(nn.Module):
 
         x = self.avgpool(x)
         x = x.view(x.size(0), -1)
+        x = self.bn2(x)
         x = self.linear(x)
 
         return x # 返回的是batchsize*10的张量
@@ -83,8 +85,6 @@ class Model(nn.Module):
     def Layer0(self,x):
         x1 = self.conv1(x)
         x1 = self.bn1(x1)
-        x1 = self.activation(x1)
-        x1 = self.maxpool1(x1)
 
         return x1
         

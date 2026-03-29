@@ -25,6 +25,9 @@ def train(model, num_epoch):
     global_step = 0  # 全局训练步数
     global_val_step = 0  # 全局验证步数
 
+    best_val_loss = float('inf')  # 初始化最佳验证损失值
+    best_model_path = None  # 初始化最佳模型路径
+
     for epoch in range(num_epoch):
         # init the parameters of trainset
         correct_preds_all = 0
@@ -83,15 +86,18 @@ def train(model, num_epoch):
                     print(f'epoch: {epoch} valid step: {val_step} batch success rate: {val_batch_acc:.3f}, loss: {val_loss.item():.3f}')
 
         val_avg_loss = val_total_loss / val_num_all
-        val_success_rate = (val_correct/val_num_all).item()
+        val_success_rate = (val_correct / val_num_all).item()
         print("epoch {} validation finish! The final success rate is {}, and the average loss is {}".format(epoch, val_success_rate, val_avg_loss))
         val_loss_history.append(val_avg_loss)
         val_success_history.append(val_success_rate)
 
-    model_path = os.path.join(saveDir, f"final_model_lr_{params.learning_rate}_epoch_{epoch+1}.pth")
-    torch.save(model.state_dict(), model_path)
-    print(f"Model saved to {model_path}")
-    
+        # Checkpoint
+        if val_avg_loss < best_val_loss:
+            best_val_loss = val_avg_loss
+            best_model_path = os.path.join(saveDir, f"best_model_lr_{params.learning_rate}_epoch_{epoch+1}.pth")
+            torch.save(model.state_dict(), best_model_path)
+            print(f"Best model updated and saved to {best_model_path} with validation loss {best_val_loss:.4f}")
+
     # patience=3, threshold=1e-3
     # if len(loss_history) >= patience + 1:
     #    # 检查最近 patience 轮的相邻损失差值
@@ -102,7 +108,11 @@ def train(model, num_epoch):
     #        break
     
     # model.train()
-
+    # 如果存在最佳模型路径，加载最佳模型权重
+    if best_model_path:
+        model.load_state_dict(torch.load(best_model_path))
+        print(f"Loaded best model weights from {best_model_path}")
+        
     return model, loss_history, success_history, val_loss_history, val_success_history, train_step_losses, val_step_losses
 
 
