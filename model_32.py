@@ -62,7 +62,7 @@ class Model_32(nn.Module):
         self.Layer4 = self.Layer(256, 512)
 
         self.avgpool = nn.AvgPool2d(kernel_size=4, stride=1)
-        self.bn2 = nn.BatchNorm2d(num_features=512)
+        self.bn2 = nn.BatchNorm1d(num_features=512)
         self.linear = nn.Linear(512, 10)
 
 
@@ -97,4 +97,4 @@ class Model_32(nn.Module):
         return nn.Sequential(block_1, block_2)
 
 
-       
+
