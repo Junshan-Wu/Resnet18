@@ -49,6 +49,12 @@ def train(model, num_epoch):
             loss.backward()
             optimizer.step()
 
+            # Monitor GPU memory usage during training
+            if torch.cuda.is_available():
+                allocated_memory = torch.cuda.memory_allocated(device) / 1024**2  # Convert to MB
+                reserved_memory = torch.cuda.memory_reserved(device) / 1024**2  # Convert to MB
+                print(f"[GPU Memory] Allocated: {allocated_memory:.2f} MB, Reserved: {reserved_memory:.2f} MB")
+
             with torch.no_grad():
                 probs, label_preds = preds.max(dim=1)
                 correct_preds = torch.sum(labels==label_preds)
@@ -86,6 +92,12 @@ def train(model, num_epoch):
                 val_num_all += val_batch_size
                 if val_step % 10 == 0:
                     print(f'epoch: {epoch} valid step: {val_step} batch success rate: {val_batch_acc:.3f}, loss: {val_loss.item():.3f}')
+
+                # Monitor GPU memory usage during validation
+                if torch.cuda.is_available():
+                    allocated_memory = torch.cuda.memory_allocated(device) / 1024**2  # Convert to MB
+                    reserved_memory = torch.cuda.memory_reserved(device) / 1024**2  # Convert to MB
+                    print(f"[GPU Memory] Allocated: {allocated_memory:.2f} MB, Reserved: {reserved_memory:.2f} MB")
 
         val_avg_loss = val_total_loss / val_num_all
         val_success_rate = (val_correct / val_num_all).item()
