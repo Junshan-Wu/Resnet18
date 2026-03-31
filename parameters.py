@@ -5,8 +5,8 @@ def get_parameters():
 
     # Training related
     parser.add_argument('--num_epoch', type=int, default=50, help='Number of training epochs')
-    parser.add_argument('--batch_size', type=int, default=512, help='Batch size for training and validation')
-    parser.add_argument('--learning_rate', type=float, default=1e-4, help='Learning rate for optimizer')
+    parser.add_argument('--batch_size', type=int, default=2048, help='Batch size for training and validation')
+    parser.add_argument('--learning_rate', type=float, default=1e-3, help='Learning rate for optimizer')
     parser.add_argument('--valid_size', type=float, default=0.2, help='Proportion of training data used for validation')
     parser.add_argument('--num_workers', type=int, default=2, help='Number of workers for data loading')
 
@@ -18,6 +18,9 @@ def get_parameters():
 
     # Data related
     parser.add_argument('--data_dir', type=str, default='./data', help='Directory for dataset storage')
+
+    # Warmup related
+    parser.add_argument('--warmup_steps', type=int, default=5, help='Number of warmup steps for learning rate scheduling')
 
     return parser.parse_args()
 
