@@ -112,7 +112,7 @@ def train(model, num_epoch):
         # Checkpoint
         if val_avg_loss < best_val_loss:
             best_val_loss = val_avg_loss
-            best_model_path = os.path.join(saveDir, f"best_model_lr_{params.learning_rate}_bs_{params.batch_size}_sch_{params.lr_scheduler}_cutout_{params.use_cutout}.pth")
+            best_model_path = os.path.join(saveDir, f"best_model_lr_{params.learning_rate}_bs_{params.batch_size}_sch_{params.lr_scheduler}_cutout_{params.use_cutout}_validsize_{params.val_size}.pth")
             torch.save(model.state_dict(), best_model_path)
             print(f"Best model updated and saved to {best_model_path} with validation loss {best_val_loss:.4f}")
 
