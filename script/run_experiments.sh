@@ -4,7 +4,7 @@
 source ./venv/Scripts/activate
 
 # Define hyperparameter values
-learning_rates=(1e-4 5e-5 1e-5 1e-6)
+learning_rates=(1e-4 5e-5 5e-4 7e-4)
 batch_sizes=(1024 2048 2500)
 schedulers=(cosine step exponential)
 cutouts=(0 1)
