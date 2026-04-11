@@ -1,11 +1,12 @@
 from test import test
 from train import train
+from train_full import train_full
 from model import Model
 from model_32 import Model_32
 import torch
 import os
 import numpy as np
-from plot import plot_training_overview, plot_learning_rate_comparison
+from plot import plot_training_overview, plot_training_overview_train_only, plot_learning_rate_comparison
 import parameters
 from utils import set_seed
 
@@ -22,7 +23,54 @@ if params.device == 'cuda':
     model = torch.nn.DataParallel(model)
 
 
-model, loss_history, success_history, val_loss_history, val_success_history, train_step_losses, val_step_losses = train(model, params.num_epoch)
+def _name_safe(value):
+    return str(value).replace('.', 'p').replace('-', 'm')
+
+if params.valid_size != 0:
+    model, loss_history, success_history, val_loss_history, val_success_history, train_step_losses, val_step_losses = train(model, params.num_epoch)
+    test_accuracy, test_loss = test(model)
+
+    # Visualize training results and save plots to results/plot
+    os.makedirs('results/plot', exist_ok=True)
+
+    plot_filename = (
+        f"lr_{_name_safe(params.learning_rate)}_"
+        f"bs_{params.batch_size}_"
+        f"sch_{params.lr_scheduler}_"
+        f"cutout_{params.use_cutout}_"
+        f"warmup_{params.warmup_epochs}_"
+        f"valid_{_name_safe(params.valid_size)}.png"
+    )
+    plot_save_path = os.path.join('results/plot', plot_filename)
+
+    plot_training_overview(
+        success_history,
+        val_success_history,
+        loss_history,
+        val_loss_history,
+        test_accuracy=test_accuracy,
+        save_path=plot_save_path
+    )
+else:
+    model, loss_history, success_history, train_step_losses = train_full(model, params.num_epoch)
+    test_accuracy, test_loss = test(model)
+    os.makedirs('results/plot', exist_ok=True)
+    plot_filename = (
+        f"fulltrain_lr_{_name_safe(params.learning_rate)}_"
+        f"bs_{params.batch_size}_"
+        f"sch_{params.lr_scheduler}_"
+        f"cutout_{params.use_cutout}_"
+        f"warmup_{params.warmup_epochs}_"
+        f"valid_{_name_safe(params.valid_size)}.png"
+    )
+    plot_save_path = os.path.join('results/plot', plot_filename)
+
+    plot_training_overview_train_only(
+        success_history,
+        loss_history,
+        test_accuracy=test_accuracy,
+        save_path=plot_save_path
+    )
 
 # 保存step-loss数据到results/data/loss目录
 # os.makedirs('results/data/loss', exist_ok=True)
@@ -38,28 +86,3 @@ model, loss_history, success_history, val_loss_history, val_success_history, tra
 # np.save('results/data/success/val_success_history.npy', val_success_history)
 # print("Training data saved to results/data/")
 
-test_accuracy, test_loss = test(model)
-
-# Visualize training results and save plots to results/plot
-os.makedirs('results/plot', exist_ok=True)
-
-def _name_safe(value):
-    return str(value).replace('.', 'p').replace('-', 'm')
-
-plot_filename = (
-    f"lr_{_name_safe(params.learning_rate)}_"
-    f"bs_{params.batch_size}_"
-    f"sch_{params.lr_scheduler}_"
-    f"cutout_{params.use_cutout}_"
-    f"valid_{_name_safe(params.valid_size)}.png"
-)
-plot_save_path = os.path.join('results/plot', plot_filename)
-
-plot_training_overview(
-    success_history,
-    val_success_history,
-    loss_history,
-    val_loss_history,
-    test_accuracy=test_accuracy,
-    save_path=plot_save_path
-)

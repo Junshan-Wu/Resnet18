@@ -7,7 +7,8 @@ def get_parameters():
     parser.add_argument('--num_epoch', type=int, default=60, help='Number of training epochs')
     parser.add_argument('--batch_size', type=int, default=2500, help='Batch size for training and validation')
     parser.add_argument('--learning_rate', type=float, default=5e-4, help='Learning rate for optimizer')
-    parser.add_argument('--valid_size', type=float, default=0.2, help='Proportion of training data used for validation')
+    parser.add_argument('--valid_size', type=float, default=0.2,
+                        help='Proportion of training data used for validation (0 means no validation split)')
     parser.add_argument('--num_workers', type=int, default=2, help='Number of workers for data loading')
     parser.add_argument('--lr_scheduler', type=str, default='cosine',
                         choices=['cosine', 'step', 'exponential', 'none'],
@@ -21,6 +22,9 @@ def get_parameters():
     # Data related
     parser.add_argument('--data_dir', type=str, default='./data', help='Directory for dataset storage')
     parser.add_argument('--use_cutout', type=int, default=0, choices=[0,1], help='Use Cutout augmentation (0/1)')
+    # Warm-up related
+    parser.add_argument('--warmup_epochs', type=int, default=5,
+                        help='Number of warm-up epochs at the start of training (0 means no warm-up)')
 
     return parser.parse_args()
 
