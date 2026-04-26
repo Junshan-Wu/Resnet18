@@ -22,29 +22,15 @@ for lr in "${learning_rates[@]}"; do
         for valid_size in "${valid_sizes[@]}"; do
           for warmup_epochs in "${warmup_epochs_list[@]}"; do
             for activation in "${activations[@]}"; do
-            # Skip 4 cases:
-            # 1) lr=7e-4, bs=1024, cutout=0, valid_size=0, warmup_epochs in {3,5,0}
-            # 2) lr=7e-4, bs=1024, cutout=0, valid_size=0.2, warmup_epochs=3
-            if [ "$lr" = "7e-4" ] && [ "$bs" = "1024" ] && [ "$cutout" = "0" ]; then
-              if [ "$valid_size" = "0" ]; then
-                echo "Skipping: lr=$lr, batch_size=$bs, scheduler=$scheduler, cutout=$cutout, valid_size=$valid_size, warmup_epochs=$warmup_epochs"
-                continue
-              fi
-              if [ "$valid_size" = "0.2" ] && [ "$warmup_epochs" = "3" ]; then
-                echo "Skipping: lr=$lr, batch_size=$bs, scheduler=$scheduler, cutout=$cutout, valid_size=$valid_size, warmup_epochs=$warmup_epochs"
-                continue
-              fi
-            fi
-
-            echo "Running experiment with lr=$lr, batch_size=$bs, scheduler=$scheduler, cutout=$cutout, valid_size=$valid_size, warmup_epochs=$warmup_epochs, activation=$activation"
-            python ./main.py \
-              --learning_rate $lr \
-              --batch_size $bs \
-              --lr_scheduler $scheduler \
-              --use_cutout $cutout \
-              --valid_size $valid_size \
-              --warmup_epochs $warmup_epochs \
-              --activation $activation
+              echo "Running experiment with lr=$lr, batch_size=$bs, scheduler=$scheduler, cutout=$cutout, valid_size=$valid_size, warmup_epochs=$warmup_epochs, activation=$activation"
+              python ./main.py \
+                --learning_rate $lr \
+                --batch_size $bs \
+                --lr_scheduler $scheduler \
+                --use_cutout $cutout \
+                --valid_size $valid_size \
+                --warmup_epochs $warmup_epochs \
+                --activation $activation
             done
           done
         done
