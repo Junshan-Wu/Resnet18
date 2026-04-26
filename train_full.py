@@ -97,6 +97,7 @@ def train_full(model, num_epoch):
                 f"fulltrain_lr_{_name_safe(params.learning_rate)}_"
                 f"bs_{params.batch_size}_"
                 f"sch_{params.lr_scheduler}_"
+                f"act_{params.activation}_"
                 f"cutout_{params.use_cutout}_"
                 f"warmup_{params.warmup_epochs}_"
                 f"valid_{_name_safe(params.valid_size)}.pth"

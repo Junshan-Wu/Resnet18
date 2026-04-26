@@ -8,8 +8,19 @@ import math
 与model_224相比，去掉了开始的activation和maxpool层，还有就是全连接层之前做了一次Batchnorm
 
 '''
+def _get_activation(name):
+    name = name.lower()
+    if name == 'relu':
+        return F.relu
+    if name in ('sigmoid', 'sigma'):
+        return torch.sigmoid
+    if name == 'tanh':
+        return torch.tanh
+    raise ValueError(f"Unsupported activation: {name}")
+
+
 class Basic_block(nn.Module):
-    def __init__(self, in_chan, out_chan):
+    def __init__(self, in_chan, out_chan, activation):
         super(Basic_block, self).__init__()
         if in_chan != out_chan:
             str = 2
@@ -20,7 +31,7 @@ class Basic_block(nn.Module):
         self.out_chan = out_chan
         self.conv1 = nn.Conv2d(in_channels=in_chan, out_channels=out_chan, kernel_size=3, stride=str, padding=1)        
         self.bn1 = nn.BatchNorm2d(num_features=out_chan) # 第一个conv后需要进行bn
-        self.activation = F.relu
+        self.activation = activation
         self.conv2 = nn.Conv2d(in_channels=out_chan, out_channels=out_chan, kernel_size=3, stride=1, padding=1)
         self.bn2 = nn.BatchNorm2d(num_features=out_chan) # 第二个conv后需要进行bn
         self.ds = nn.Conv2d(in_channels=in_chan, out_channels=out_chan, kernel_size=1, stride=2, bias=False)
@@ -51,8 +62,9 @@ class Basic_block(nn.Module):
 
 
 class Model_32(nn.Module):
-    def __init__(self):
+    def __init__(self, activation='relu'):
         super(Model_32, self).__init__()
+        self.activation = _get_activation(activation)
         # 卷积核：N*C*H*W -> 64*3*3*3
         self.conv1 = nn.Conv2d(in_channels=3, out_channels=64, kernel_size=3, stride=1, padding=1)
         self.bn1 = nn.BatchNorm2d(num_features=64)
@@ -92,8 +104,8 @@ class Model_32(nn.Module):
         
 
     def Layer(self, in_chan, out_chan):
-        block_1 = Basic_block(in_chan, out_chan)
-        block_2 = Basic_block(out_chan, out_chan)
+        block_1 = Basic_block(in_chan, out_chan, self.activation)
+        block_2 = Basic_block(out_chan, out_chan, self.activation)
 
 
         return nn.Sequential(block_1, block_2)

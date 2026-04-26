@@ -4,12 +4,15 @@
 source ./venv/Scripts/activate
 
 # Fixed/target hyperparameter values
-learning_rates=(7e-4)
+learning_rates=(7e-4 8e-4 5e-4)
 batch_sizes=(1024 850)
 schedulers=(cosine)
 cutouts=(0 1)
-valid_sizes=(0 0.2)
+valid_sizes=(0)
 warmup_epochs_list=(3 5 0)
+# activations=(relu sigmoid tanh)
+activations=(relu)
+
 
 # Iterate over all combinations and skip specific cases
 for lr in "${learning_rates[@]}"; do
@@ -18,6 +21,7 @@ for lr in "${learning_rates[@]}"; do
       for cutout in "${cutouts[@]}"; do
         for valid_size in "${valid_sizes[@]}"; do
           for warmup_epochs in "${warmup_epochs_list[@]}"; do
+            for activation in "${activations[@]}"; do
             # Skip 4 cases:
             # 1) lr=7e-4, bs=1024, cutout=0, valid_size=0, warmup_epochs in {3,5,0}
             # 2) lr=7e-4, bs=1024, cutout=0, valid_size=0.2, warmup_epochs=3
@@ -32,14 +36,16 @@ for lr in "${learning_rates[@]}"; do
               fi
             fi
 
-            echo "Running experiment with lr=$lr, batch_size=$bs, scheduler=$scheduler, cutout=$cutout, valid_size=$valid_size, warmup_epochs=$warmup_epochs"
+            echo "Running experiment with lr=$lr, batch_size=$bs, scheduler=$scheduler, cutout=$cutout, valid_size=$valid_size, warmup_epochs=$warmup_epochs, activation=$activation"
             python ./main.py \
               --learning_rate $lr \
               --batch_size $bs \
               --lr_scheduler $scheduler \
               --use_cutout $cutout \
               --valid_size $valid_size \
-              --warmup_epochs $warmup_epochs
+              --warmup_epochs $warmup_epochs \
+              --activation $activation
+            done
           done
         done
       done

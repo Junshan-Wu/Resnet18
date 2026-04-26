@@ -13,9 +13,9 @@ from utils import set_seed
 # Set the random seed for reproducibility
 set_seed(3407)
 
-# model = Model()
-model = Model_32()
 params = parameters.get_parameters()
+# model = Model(activation=params.activation)
+model = Model_32(activation=params.activation)
 device = torch.device(params.device if torch.cuda.is_available() else "cpu")
 model = model.to(device)
 
@@ -37,6 +37,7 @@ if params.valid_size != 0:
         f"lr_{_name_safe(params.learning_rate)}_"
         f"bs_{params.batch_size}_"
         f"sch_{params.lr_scheduler}_"
+        f"act_{params.activation}_"
         f"cutout_{params.use_cutout}_"
         f"warmup_{params.warmup_epochs}_"
         f"valid_{_name_safe(params.valid_size)}.png"
@@ -59,6 +60,7 @@ else:
         f"fulltrain_lr_{_name_safe(params.learning_rate)}_"
         f"bs_{params.batch_size}_"
         f"sch_{params.lr_scheduler}_"
+        f"act_{params.activation}_"
         f"cutout_{params.use_cutout}_"
         f"warmup_{params.warmup_epochs}_"
         f"valid_{_name_safe(params.valid_size)}.png"

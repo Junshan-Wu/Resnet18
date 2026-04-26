@@ -13,6 +13,9 @@ def get_parameters():
     parser.add_argument('--lr_scheduler', type=str, default='cosine',
                         choices=['cosine', 'step', 'exponential', 'none'],
                         help='Type of learning rate scheduler')
+    parser.add_argument('--activation', type=str, default='relu',
+                        choices=['relu', 'sigmoid', 'sigma', 'tanh'],
+                        help='Activation function (relu/sigmoid/tanh)')
     # Model related
     parser.add_argument('--model_save_dir', type=str, default='./model_weights/', help='Directory to save model weights')
 
