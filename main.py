@@ -1,6 +1,7 @@
 from test import test
 from train import train
 from train_full import train_full
+from train_full_relay import train_full_relay
 from model import Model
 from model_32 import Model_32
 import torch
@@ -53,18 +54,32 @@ if params.valid_size != 0:
         save_path=plot_save_path
     )
 else:
-    model, loss_history, success_history, train_step_losses = train_full(model, params.num_epoch)
+    if params.use_relay_train:
+        model, loss_history, success_history, train_step_losses = train_full_relay(model, params.num_epoch)
+    else:
+        model, loss_history, success_history, train_step_losses = train_full(model, params.num_epoch)
+
     test_accuracy, test_loss = test(model)
     os.makedirs('results/plot', exist_ok=True)
-    plot_filename = (
-        f"fulltrain_lr_{_name_safe(params.learning_rate)}_"
-        f"bs_{params.batch_size}_"
-        f"sch_{params.lr_scheduler}_"
-        f"act_{params.activation}_"
-        f"cutout_{params.use_cutout}_"
-        f"warmup_{params.warmup_epochs}_"
-        f"valid_{_name_safe(params.valid_size)}.png"
-    )
+
+    if params.use_relay_train:
+        plot_filename = (
+            f"fullrelay_bs_{params.batch_size}_"
+            f"act_{params.activation}_"
+            f"cutout_{params.use_cutout}_"
+            f"warmup_{params.warmup_epochs}.png"
+        )
+    else:
+        plot_filename = (
+            f"fulltrain_lr_{_name_safe(params.learning_rate)}_"
+            f"bs_{params.batch_size}_"
+            f"sch_{params.lr_scheduler}_"
+            f"act_{params.activation}_"
+            f"cutout_{params.use_cutout}_"
+            f"warmup_{params.warmup_epochs}_"
+            f"valid_{_name_safe(params.valid_size)}.png"
+        )
+
     plot_save_path = os.path.join('results/plot', plot_filename)
 
     plot_training_overview_train_only(

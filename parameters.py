@@ -13,6 +13,8 @@ def get_parameters():
     parser.add_argument('--lr_scheduler', type=str, default='cosine',
                         choices=['cosine', 'step', 'exponential', 'none'],
                         help='Type of learning rate scheduler')
+    parser.add_argument('--use_relay_train', type=int, default=0, choices=[0, 1],
+                        help='Use relay training framework for full training (0/1)')
     parser.add_argument('--activation', type=str, default='relu',
                         choices=['relu', 'sigmoid', 'sigma', 'tanh'],
                         help='Activation function (relu/sigmoid/tanh)')
