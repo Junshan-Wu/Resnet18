@@ -4,7 +4,7 @@ def get_parameters():
     parser = argparse.ArgumentParser(description="Hyperparameters for ResNet18 training")
 
     # Training related
-    parser.add_argument('--num_epoch', type=int, default=60, help='Number of training epochs')
+    parser.add_argument('--num_epoch', type=int, default=250, help='Number of training epochs')
     parser.add_argument('--batch_size', type=int, default=2500, help='Batch size for training and validation')
     parser.add_argument('--learning_rate', type=float, default=5e-4, help='Learning rate for optimizer')
     parser.add_argument('--valid_size', type=float, default=0.2,

@@ -4,14 +4,14 @@
 source ./venv/Scripts/activate
 
 # Fixed/target hyperparameter values
-learning_rates=(7e-4 8e-4 5e-4)
+learning_rates=(8e-4 1e-3)
 batch_sizes=(1024 850)
 schedulers=(cosine)
 cutouts=(0 1)
 valid_sizes=(0)
-warmup_epochs_list=(3 5 0)
+warmup_epochs_list=(3 5)
 # activations=(relu sigmoid tanh)
-activations=(relu)
+activations=(sigmoid tanh)
 
 
 # Iterate over all combinations and skip specific cases
